@@ -1,0 +1,58 @@
+  get_next_line(принимает fd)), возращает строку(char *);
+  задача функции читать из файла указанного из fd и возращать 
+  каждый раз пока файл не закончиться.
+  fd - это int (файловый дескриптор)
+
+1.  в main открываем файл с помощью системного вызова open и сохраняем в fd
+номер открытого файла;
+2.  идем в функцию get_next_line
+  Сперва проверяем остаток
+  остаток - это (char *)
+объяснение идет ниже
+	When we first enter the loop, this check is skipped,
+because we haven't saved anything for the remainder yet. Because we don't have anything
+the rest go to the point (if there is no balance :)
+if the remainder is '\n':
+add '\0' instead
+ save the next remainder
+  return string
+if there is no '\n' in the remainder:
+  move on (to read)
+if there is no remainder:
+
+
+
+
+
+- using read read from the file
+read takes (First argument is fd - file descriptor,
+
+
+
+
+
+The second argument is a pointer to the memory area where the data will be placed in static memory,
+The third argument is the size (how many characters the read function will read from the file))
+read returns the number of characters read, this may be less than the limit
+size is not a mistake.
+
+
+
+
+
+
+
+
+
+
+
+
+
+After we have read from the file and saved
+check if there is a '\n' character in the read line:
+  if there is:
+  first add '\0' instead
+  - what is left in the buffer after '\0' we save in the remainder
+  (so that next time you start checking from the remainder)
+  - after saving the rest, return the string up to the character '\0'
+if not, then read further using read

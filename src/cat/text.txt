@@ -3,6 +3,11 @@
   каждый раз пока файл не закончиться.
   fd - это int (файловый дескриптор)
 
+
+
+
+
+
 1.  в main открываем файл с помощью системного вызова open и сохраняем в fd
 номер открытого файла;
 2.  идем в функцию get_next_line
@@ -10,6 +15,7 @@
   остаток - это (char *)
 объяснение идет ниже
 	When we first enter the loop, this check is skipped,
+номер открытого файла;
 because we haven't saved anything for the remainder yet. Because we don't have anything
 the rest go to the point (if there is no balance :)
 if the remainder is '\n':

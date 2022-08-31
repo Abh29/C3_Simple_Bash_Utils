@@ -14,11 +14,14 @@ char *s21_get_next_line(int fd) {
       *tmp_ptr = '\0';
       result = s21_strdup(token);
       tmp_ptr++;
+      free(token);
       token = s21_NULL;
       token = s21_strdup(tmp_ptr);
       return (result);
     } else {
       result = s21_strdup(token);
+      free(token);
+      token = s21_NULL;
     }
   }
   while (1) {
@@ -36,8 +39,10 @@ char *s21_get_next_line(int fd) {
       free(tmp_1);
     }
     tmp_ptr++;
+    free(token);
     token = s21_NULL;
     token = s21_strdup(tmp_ptr);
+    free(tmp_ptr);
     return (result);
   } else {
     if (result != s21_NULL) {

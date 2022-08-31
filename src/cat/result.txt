@@ -1,0 +1,64 @@
+  get_next_line(M-PM-?M-QM-^@M-PM-8M-PM-=M-PM-8M-PM-<M-PM-0M-PM-5M-QM-^B fd)), M-PM-2M-PM->M-PM-7M-QM-^@M-PM-0M-QM-^IM-PM-0M-PM-5M-QM-^B M-QM-^AM-QM-^BM-QM-^@M-PM->M-PM-:M-QM-^C(char *);
+  M-PM-7M-PM-0M-PM-4M-PM-0M-QM-^GM-PM-0 M-QM-^DM-QM-^CM-PM-=M-PM-:M-QM-^FM-PM-8M-PM-8 M-QM-^GM-PM-8M-QM-^BM-PM-0M-QM-^BM-QM-^L M-PM-8M-PM-7 M-QM-^DM-PM-0M-PM-9M-PM-;M-PM-0 M-QM-^CM-PM-:M-PM-0M-PM-7M-PM-0M-PM-=M-PM-=M-PM->M-PM-3M-PM-> M-PM-8M-PM-7 fd M-PM-8 M-PM-2M-PM->M-PM-7M-QM-^@M-PM-0M-QM-^IM-PM-0M-QM-^BM-QM-^L 
+  M-PM-:M-PM-0M-PM-6M-PM-4M-QM-^KM-PM-9 M-QM-^@M-PM-0M-PM-7 M-PM-?M-PM->M-PM-:M-PM-0 M-QM-^DM-PM-0M-PM-9M-PM-; M-PM-=M-PM-5 M-PM-7M-PM-0M-PM-:M-PM->M-PM-=M-QM-^GM-PM-8M-QM-^BM-QM-^LM-QM-^AM-QM-^O.
+  fd - M-QM-^MM-QM-^BM-PM-> int (M-QM-^DM-PM-0M-PM-9M-PM-;M-PM->M-PM-2M-QM-^KM-PM-9 M-PM-4M-PM-5M-QM-^AM-PM-:M-QM-^@M-PM-8M-PM-?M-QM-^BM-PM->M-QM-^@)
+
+
+
+
+
+
+1.  M-PM-2 main M-PM->M-QM-^BM-PM-:M-QM-^@M-QM-^KM-PM-2M-PM-0M-PM-5M-PM-< M-QM-^DM-PM-0M-PM-9M-PM-; M-QM-^A M-PM-?M-PM->M-PM-<M-PM->M-QM-^IM-QM-^LM-QM-^N M-QM-^AM-PM-8M-QM-^AM-QM-^BM-PM-5M-PM-<M-PM-=M-PM->M-PM-3M-PM-> M-PM-2M-QM-^KM-PM-7M-PM->M-PM-2M-PM-0 open M-PM-8 M-QM-^AM-PM->M-QM-^EM-QM-^@M-PM-0M-PM-=M-QM-^OM-PM-5M-PM-< M-PM-2 fd
+M-PM-=M-PM->M-PM-<M-PM-5M-QM-^@ M-PM->M-QM-^BM-PM-:M-QM-^@M-QM-^KM-QM-^BM-PM->M-PM-3M-PM-> M-QM-^DM-PM-0M-PM-9M-PM-;M-PM-0;
+2.  M-PM-8M-PM-4M-PM-5M-PM-< M-PM-2 M-QM-^DM-QM-^CM-PM-=M-PM-:M-QM-^FM-PM-8M-QM-^N get_next_line
+  M-PM-!M-PM-?M-PM-5M-QM-^@M-PM-2M-PM-0 M-PM-?M-QM-^@M-PM->M-PM-2M-PM-5M-QM-^@M-QM-^OM-PM-5M-PM-< M-PM->M-QM-^AM-QM-^BM-PM-0M-QM-^BM-PM->M-PM-:
+  M-PM->M-QM-^AM-QM-^BM-PM-0M-QM-^BM-PM->M-PM-: - M-QM-^MM-QM-^BM-PM-> (char *)
+M-PM->M-PM-1M-QM-^JM-QM-^OM-QM-^AM-PM-=M-PM-5M-PM-=M-PM-8M-PM-5 M-PM-8M-PM-4M-PM-5M-QM-^B M-PM-=M-PM-8M-PM-6M-PM-5
+	When we first enter the loop, this check is skipped,
+M-PM-=M-PM->M-PM-<M-PM-5M-QM-^@ M-PM->M-QM-^BM-PM-:M-QM-^@M-QM-^KM-QM-^BM-PM->M-PM-3M-PM-> M-QM-^DM-PM-0M-PM-9M-PM-;M-PM-0;
+because we haven't saved anything for the remainder yet. Because we don't have anything
+the rest go to the point (if there is no balance :)
+if the remainder is '\n':
+add '\0' instead
+ save the next remainder
+  return string
+if there is no '\n' in the remainder:
+  move on (to read)
+if there is no remainder:
+
+
+
+
+
+- using read read from the file
+read takes (First argument is fd - file descriptor,
+
+
+
+
+
+The second argument is a pointer to the memory area where the data will be placed in static memory,
+The third argument is the size (how many characters the read function will read from the file))
+read returns the number of characters read, this may be less than the limit
+size is not a mistake.
+
+
+
+
+
+
+
+
+
+
+
+
+
+After we have read from the file and saved
+check if there is a '\n' character in the read line:
+  if there is:
+  first add '\0' instead
+  - what is left in the buffer after '\0' we save in the remainder
+  (so that next time you start checking from the remainder)
+  - after saving the rest, return the string up to the character '\0'
+if not, then read further using read

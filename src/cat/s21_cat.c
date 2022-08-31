@@ -29,7 +29,7 @@ void print_str(char *str, t_cat *flags) {
   arr[6] = "^F";
   arr[7] = "^G";
   arr[8] = "^H";
-  arr[9] =  " ";
+  arr[9] = "\t";
   arr[10] = "";
   arr[11] = "^K";
   arr[12] = "^L";
@@ -279,29 +279,16 @@ void print_str(char *str, t_cat *flags) {
 
   int i = 0;
   while (str[i]) {
-    if (flags->flag_v == 1 && flags->flag_T == 1) {
-      if (str[i] == '\t') {
-        printf("^I");
-      } else {
-        printf("%s", arr[(str[i] + 256) % 256]);
-      } } else if ((flags->flag_v == 1 && flags->flag_E == 1) \
-    || (flags->flag_v == 1)) {
+    if ((flags->flag_t == 1 || flags->flag_T == 1) && (str[i] == '\t'))
+      printf("^I");
+    else if (flags->flag_v == 1)
       printf("%s", arr[(str[i] + 256) % 256]);
-    } else if (flags->flag_T == 1) {
-      if (str[i] == '\t') {
-        printf("^I");
-      } else {
-        printf("%c", str[i]);
-      } } else if (flags->flag_b ==  1) {
+    else 
       printf("%c", str[i]);
-    } else if ((flags->flag_s == 1) || (flags->flag_E == 1) \
-    || (flags->flag_n == 1)) {
-      printf("%c", str[i]);
-    } i++;
+    i++;
   }
-  if (flags->flag_E == 1) {
-    if (str[i] == '\0')
-      printf("$"); }
+  if (flags->flag_E == 1 && str[i] == 0)
+      printf("$");
   printf("\n");
 }
 
@@ -314,13 +301,14 @@ int read_from_files(t_cat *flags) {
 
   i = 0;
   if (flags->help == 1) {
-      fd = open("man.txt", O_RDONLY);
-        if (fd == -1)
-          s21_exit("The file does not exist", 1);
+    fd = open("man.txt", O_RDONLY);
+      if (fd == -1)
+        s21_exit("The file does not exist", 1);
     while ((tmp = s21_get_next_line(fd))) {
       printf("%s\n", tmp); }
+    free(tmp);
     close(fd);
-    s21_exit("", 1); }
+  }
   while (flags->files[i] != s21_NULL) {
     fd = open(flags->files[i], O_RDONLY);
     if (fd == -1)
@@ -333,72 +321,74 @@ int read_from_files(t_cat *flags) {
           flags->flag++;
         else
           flags->flag = 0; }
-      if (flags->flag > 2)
+      if (flags->flag >= 2)
         continue;
-      if (flags->flag_n == 1) {
-        printf("%6d  ", j);
-      } else if (flags->flag_b == 1 && *tmp != '\0') {
-        printf("%6d  ", k);
+      if (flags->flag_b == 1 && *tmp != '\0') {
+        printf("%6d\t", k);
         k++; }
+      else if (flags->flag_n == 1 && flags->flag_b == 0) {
+          printf("%6d\t", j);
+          j++;
+      }
       if (flags->flag == 1 || flags->flag == 0)
-          print_str(tmp, flags);
-      j++; }
-    free(tmp);
+        print_str(tmp, flags);
+      free(tmp);
+      }
   close(fd);
   i++; }
   return 0;
 }
 
 void ft_check_long_param(char *str, t_cat *flag) {
-  if (s21_strcmp((char *)str, "--show-all") == 0) {
+  if (s21_strcmp(str, "--show-all") == 0) {
     flag->flag_v = 1;
     flag->flag_E = 1;
     flag->flag_T = 1;
-  } else if (s21_strcmp((char *)str, "--number-nonblank")== 0) {
+  } else if (s21_strcmp(str, "--number-nonblank")== 0) {
     flag->flag_b = 1;
-  } else if (s21_strcmp((char *)str, "--show-ends") == 0) {
+  } else if (s21_strcmp(str, "--show-ends") == 0) {
     flag->flag_E = 1;
-  } else if (s21_strcmp((char *)str, "--number") == 0) {
+  } else if (s21_strcmp(str, "--number") == 0) {
     flag->flag_n = 1;
-  } else if (s21_strcmp((char *)str, "--squeeze-blank") == 0) {
+  } else if (s21_strcmp(str, "--squeeze-blank") == 0) {
     flag->flag_s = 1;
-  } else if (s21_strcmp((char *)str, "--show-tabs") == 0) {
+  } else if (s21_strcmp(str, "--show-tabs") == 0) {
     flag->flag_T = 1;
-  } else if (s21_strcmp((char *)str, "--show-nonprinting") == 0) {
+  } else if (s21_strcmp(str, "--show-nonprinting") == 0) {
     flag->flag_v = 1;
-  } else if (s21_strcmp((char *)str, "--help") == 0) {
+  } else if (s21_strcmp(str, "--help") == 0) {
     flag->help = 1;
-  } else if (s21_strcmp((char *)str, "--version") == 0) {
+  } else if (s21_strcmp(str, "--version") == 0) {
     flag->flag_v = 1;
   } else {
     s21_exit("invalid long param", 1);
   }
 }
 
-void print_param(t_cat *flag, char **str, int size) {
-  int i;
-  int j;
+// void print_param(t_cat *flag, char **str, int size) {
+//   int i;
+//   int j;
 
-  printf("%d\n", flag->flag);
-  printf("%d\n", flag->flag_A);
-  printf("%d\n", flag->flag_b);
-  printf("%d\n", flag->flag_e);
-  printf("%d\n", flag->flag_E);
-  printf("%d\n", flag->flag_n);
-  printf("%d\n", flag->flag_s);
-  printf("%d\n", flag->flag_t);
-  printf("%d\n", flag->flag_T);
-  printf("%d\n", flag->flag_u);
-  printf("%d\n", flag->flag_v);
-  printf("%d\n", flag->help);
-  printf("%d\n", flag->version);
+//   printf("%d\n", flag->flag);
+//   printf("%d\n", flag->flag_A);
+//   printf("%d\n", flag->flag_b);
+//   printf("%d\n", flag->flag_e);
+//   printf("%d\n", flag->flag_E);
+//   printf("%d\n", flag->flag_n);
+//   printf("%d\n", flag->flag_s);
+//   printf("%d\n", flag->flag_t);
+//   printf("%d\n", flag->flag_T);
+//   printf("%d\n", flag->flag_u);
+//   printf("%d\n", flag->flag_v);
+//   printf("%d\n", flag->help);
+//   printf("%d\n", flag->version);
 
-  i = 0;
-  while (i < size) {
-    j = 0;
-    printf("%s\n", &str[i][j]);
-    i++; }
-}
+//   i = 0;
+//   while (i < size) {
+//     j = 0;
+//     printf("%s\n", &str[i][j]);
+//     i++; }
+// }
 
 int init_cat(t_cat *flag, int argc, char **argv) {
   char *str;
@@ -458,8 +448,13 @@ int init_cat(t_cat *flag, int argc, char **argv) {
     j++; }
   file_name[i] = s21_NULL;
   flag->files = file_name;
-  print_param(flag, file_name, count);
+  free(file_name);
+  //print_param(flag, file_name, count);
   return (-1);
+}
+
+void free_cat(t_cat *florida) {
+  free(florida->files);
 }
 
 int main(int argc, char **argv) {
@@ -467,5 +462,6 @@ int main(int argc, char **argv) {
   ft_init_flags(&florida);
   init_cat(&florida, argc, argv);
   read_from_files(&florida);
+  free_cat(&florida);
   return 0;
 }

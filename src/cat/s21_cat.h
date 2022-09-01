@@ -1,28 +1,39 @@
 #ifndef S21_CAT
 # define S21_CAT
 
-#include "s21_string.h"
+#include "src/s21_string.h"
+#include "gnl/get_next_line.h"
+#include <stdio.h>
 
-typedef struct flags {
+#define F_HELP    300
+#define F_VERSION 301
+
+
+
+extern int  exit_status;
+extern char *non_print[256];
+
+typedef struct s_cat {
   char **files;
-  char flag;
-  char flag_bb;
-  char flag_A;
-  char flag_b;
-  char flag_e;
-  char flag_E;
-  char flag_n;
-  char flag_s;
-  char flag_t;
-  char flag_T;
-  char flag_u;
-  char flag_v;
-  char help;
-  char version;
-
+  int   flags;
+  int   c_n;
+  int   c_b;
 } t_cat;
 
-void    s21_putstr(char *str, int fd);
-void    s21_exit(char *str, int n);
+
+void  ft_init_flags(t_cat *flags);
+int   check_flag(t_cat *arg, int flag);
+void  set_flag(t_cat *arg, int flag);
+void  print_error(char *msg, int status, int mask);
+void  print_str(char *str, t_cat *flags);
+void  print_help(void);
+void  print_version(void);
+void  print_file(t_cat *flags, char *file_path);
+int   print_files(t_cat *flags);
+void  ft_set_long_flag(t_cat *arg, char *flag);
+int   read_args(t_cat *flag, int argc, char **argv);
+void  s21_putstr(char *str, int fd);
+void  s21_exit(char *str, int n);
+void  free_cat(t_cat *flags);
 
 #endif

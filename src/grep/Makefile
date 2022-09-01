@@ -1,8 +1,6 @@
-SRC = src/*.c gnl/*.c s21_cat.c
+SRC= main.c gnl/get_next_line_utils.c gnl/get_next_line.c src/*.c
 
 CC = gcc
-
-NAME = s21_cat
 
 FLGS = -Wall -Werror -Wextra
 
@@ -15,44 +13,38 @@ VALGFLGS = --vgdb=full \
 
 FBSIZE = -D BUFFER_SIZE=42
 
-HEADER = s21_cat.h
+HEADER = ft_grep.h
+
+NAME = s21_grep
 
 ARGS = ""
 
-TEST_FILE = s21_cat_tests.sh
-
-
-all: $(NAME)
-
+all :$(NAME)
+	
 $(NAME): $(SRC) $(HEADER)
+	@echo "compiling ..."
 	@$(CC) $(FLGS) $(FBSIZE) $(SRC) -o $(NAME)
 
 run: $(NAME)
 	@./$(NAME) $(ARGS)
 
-clean :
-	@rm -f *.o
-	@rm -f valgrind-out.txt
+clean:
+	@echo "cleaning all objects"
+	@rm -f $(NAME)
 
 fclean: clean
-	@rm -f $(NAME)
-	@rm -f result.txt result2.txt
+	@rm -f valgrind-out.txt
 
 re: fclean all
 
-test: $(NAME) $(TEST_FILE)
-	bash $(TEST_FILE)
-
-style: $(SRC)
-	python3 cpplint.py --extensions=c $(SRC)
-
-cppckeck :
-	cppcheck --enable=all --suppress=missingIncludeSystem $(SRC)
-
 debug: $(SRC) $(HEADER)
+	@echo "compiling with -g ..."
 	@$(CC) $(FLGS) -g $(FBSIZE) $(SRC) -o $(NAME)
 
 valgrind: $(NAME)
 	@valgrind $(VALGFLGS) ./$(NAME) $(ARGS)
 
-.PHONY: all clean fclean re test valgrind debug cppcheck style
+.PHONY: all clean fclean re
+
+
+#&.c : &.o libft.a 

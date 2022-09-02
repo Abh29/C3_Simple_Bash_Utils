@@ -10,8 +10,7 @@ int     match(t_grep *arg, char *str, regmatch_t pmatch[], t_list **matches){
     out = 0;
     if (*str == 0 && check_flag(arg, F_EMPTLINE))
         return (1);
-    while (*str)
-    {
+    do {
         p = arg->patterns_list;
         min.rm_so = __INT32_MAX__;
         min.rm_eo = -1;
@@ -45,7 +44,7 @@ int     match(t_grep *arg, char *str, regmatch_t pmatch[], t_list **matches){
         }else
             break;
         
-    }
+    } while (*str);
     return (out);
 }
 

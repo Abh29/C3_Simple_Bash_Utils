@@ -44,7 +44,8 @@ char    *ft_get_next_line(int fd)
         if (p)
         {
             *p = 0;
-            rest = ft_strdup1(p + 1);
+            if (*(p + 1))
+                rest = ft_strdup1(p + 1);
             ft_lstadd_back1(&out, ft_lstnew1(ft_strdup1(buff)));
             break;
         }

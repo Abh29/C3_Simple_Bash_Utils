@@ -11,6 +11,9 @@ void print_str(char *str, t_cat *flags) {
       printf("%c", *str);
     str++;
   }
+  if (check_flag(flags, 'E'))
+    printf("$");
+  printf("\n");
 }
 
 void  print_help(void) {
@@ -38,7 +41,7 @@ void  print_version(void) {
 void  print_file(t_cat *flags, char *file_path){
 
   int   fd;
-  char  *line, *next;
+  char  *line;
   int   c_empty;
 
   if (flags == s21_NULL || file_path == s21_NULL)
@@ -51,9 +54,7 @@ void  print_file(t_cat *flags, char *file_path){
   }
   
   c_empty = 0;
-  line = ft_get_next_line(fd);
-  while (line) {
-      (next = ft_get_next_line(fd));
+  while ((line = ft_get_next_line(fd))) {
       if (check_flag(flags, 's')) {
         if (*line == '\0')
           c_empty++;
@@ -61,22 +62,14 @@ void  print_file(t_cat *flags, char *file_path){
           c_empty = 0; }
       if (c_empty >= 2) {
         free(line);
-        line =  next;
         continue;
       }
       if (check_flag(flags, 'b') && *line != '\0')
         printf("%6d\t", flags->c_b++);
-      else if (check_flag(flags, 'n') && check_flag(flags, 'b') == 0 && next)
+      else if (check_flag(flags, 'n') && check_flag(flags, 'b') == 0)
           printf("%6d\t", flags->c_n++);
       print_str(line, flags);
       free(line);
-      if (next)
-      {
-        if (check_flag(flags, 'E'))
-          printf("$");
-        printf("\n");
-      }
-      line = next;
   }
   if (fd != 1)
     close(fd);

@@ -57,6 +57,11 @@ void    print_matches_clean(t_grep *arg, char *str, t_list *matches, char *file_
     while (p)
     {
         regmatch_t *rm = p->content;
+        if (check_flag(arg, 'o') && rm->rm_eo == 0)
+        {
+            p = p->next;
+            continue;
+        }
         print_prifix(arg, str, file_path);
         for (int i = 0; i < rm->rm_so && *str; i++, str++);
         if (check_flag(arg, F_COLORED))            
@@ -82,7 +87,7 @@ void    print_args(t_grep *arg){
     p = arg->patterns_path;
     while (p)
     {
-        printf("\t%s\n", (char *) p->content);
+        printf("\t|%s|\n", (char *) p->content);
         p = p->next;
     }
 
@@ -90,7 +95,7 @@ void    print_args(t_grep *arg){
     p = arg->files;
     while (p)
     {
-        printf("\t%s\n", (char *) p->content);
+        printf("\t|%s|\n", (char *) p->content);
         p = p->next;
     }
 
@@ -98,7 +103,8 @@ void    print_args(t_grep *arg){
     p = arg->patterns_list;
     while (p)
     {
-        printf("\t%s\n", (char *) p->content);
+        printf("\t|%s|\n", (char *) p->content);
         p = p->next;
     }
+    printf("------------------------------------\n");
 }

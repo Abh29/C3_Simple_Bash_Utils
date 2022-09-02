@@ -8,10 +8,13 @@ int     match(t_grep *arg, char *str, regmatch_t pmatch[], t_list **matches){
     if (!arg || !arg->patterns_list || !str)
         return (0);
     out = 0;
+    if (*str == 0 && check_flag(arg, F_EMPTLINE))
+        return (1);
     while (*str)
     {
         p = arg->patterns_list;
         min.rm_so = __INT32_MAX__;
+        min.rm_eo = -1;
         while (p)
         {
             
@@ -20,14 +23,21 @@ int     match(t_grep *arg, char *str, regmatch_t pmatch[], t_list **matches){
                 out = 1;
                 if (check_flag(arg, 'l'))
                     return (1);
-                if (pmatch[0].rm_so != -1 && pmatch[0].rm_so < min.rm_so)
+                if (pmatch[0].rm_so == 0 && pmatch[0].rm_eo == 0)
+                {
+                    tmp = ft_allocate(sizeof(regmatch_t));
+                    tmp->rm_eo = 0;
+                    tmp->rm_so = 0;
+                    ft_lstadd_back(matches, ft_lstnew(tmp));
+                }
+                else if (pmatch[0].rm_so != -1 && pmatch[0].rm_so < min.rm_so)
                     ft_memcpy(&min, &pmatch[0], sizeof(regmatch_t));
                 else if (pmatch[0].rm_so != -1 && pmatch[0].rm_so == min.rm_so && pmatch[0].rm_eo > min.rm_eo)
                     ft_memcpy(&min, &pmatch[0], sizeof(regmatch_t));
             }
             p = p->next;
         }
-        if (min.rm_so != __INT32_MAX__){
+        if (min.rm_so != __INT32_MAX__ && min.rm_eo != -1){
             tmp = ft_allocate(sizeof(regmatch_t));
             ft_memcpy(tmp, &min, sizeof(regmatch_t));
             ft_lstadd_back(matches, ft_lstnew(tmp));
@@ -39,6 +49,16 @@ int     match(t_grep *arg, char *str, regmatch_t pmatch[], t_list **matches){
     return (out);
 }
 
+int    check_stdin(char *file_path) {
+    if (file_path == NULL)
+        return (1);
+    if (*file_path)
+    {
+        return (ft_strncmp(file_path, "-", ft_strlen(file_path)) == 0 || ft_strncmp(file_path, "--", ft_strlen(file_path)) == 0);
+    }
+    return (0);
+}
+
 int    match_file(t_grep *arg, char *file_path){
     int         fd;
     char        *line;
@@ -47,15 +67,17 @@ int    match_file(t_grep *arg, char *file_path){
 
     if( arg == NULL)
         return (0);
-    if (file_path == NULL || ft_strncmp(file_path, "-", ft_strlen(file_path)) == 0 || \
-        ft_strncmp(file_path, "--", ft_strlen(file_path)) == 0)
-    {
-        fd = 0;
+
+    if (check_flag(arg, 'v') && check_flag(arg, F_EMPTLINE))
+        return (0);
+
+    if (check_stdin(file_path)) {
+        fd = STDIN_FILENO;
         file_path = "(standard input)";
     }
     else if ((fd = open(file_path, O_RDONLY)) < 0)
     {
-        print_error("open file_path error: ", 2, check_flag(arg, 's') == 0);
+        print_error("s21_grep: ", 2, check_flag(arg, 's') == 0);
         return (0);
     }
 
@@ -78,10 +100,8 @@ int    match_file(t_grep *arg, char *file_path){
                 free(line);
                 break;
             }
-        }else if (check_flag(arg, F_EMPTLINE) && !check_flag(arg, 'o'))
-        {
-            print_prifix(arg, line, file_path);
-            printf("%s\n", line);
+            if (exit_status == EXIT_FAILURE)
+                exit_status = EXIT_SUCCESS;
         }
         free(line);
         ft_lstclear(&matches, free);
@@ -97,7 +117,6 @@ int    match_file(t_grep *arg, char *file_path){
         }
         printf("%d\n", arg->c_matches);
     }
-
     if (fd)
         close(fd);
     return (arg->c_matches);

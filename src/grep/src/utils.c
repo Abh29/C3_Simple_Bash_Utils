@@ -100,6 +100,31 @@ void    set_flag(t_grep *arg, int flag)
             arg->flags |= 1 << 13;
             break;
         default:
-            exit_msg("grep: invalid option\n", 2, 1);
+           exit_msg("grep: invalid option\n", 2, 1); 
+            
     }
+}
+
+void    set_long_flag(t_grep *arg, char *flag)
+{
+    if (arg == NULL || flag == NULL)
+        return ;
+    if (ft_strncmp("--ignore-case", flag, ft_strlen(flag) + 1) == 0)
+        set_flag(arg, 'i');
+    else if (ft_strncmp("--invert-match", flag, ft_strlen(flag) + 1) == 0)
+        set_flag(arg, 'v');
+    else if (ft_strncmp("--count", flag, ft_strlen(flag) + 1) == 0)
+        set_flag(arg, 'c');
+    else if (ft_strncmp("--files-with-matches", flag, ft_strlen(flag) + 1) == 0)
+        set_flag(arg, 'l');
+    else if (ft_strncmp("--line-number", flag, ft_strlen(flag) + 1) == 0)
+        set_flag(arg, 'n');
+    else if (ft_strncmp("--no-filename", flag, ft_strlen(flag) + 1) == 0)
+        set_flag(arg, 'h');
+    else if (ft_strncmp("--no-messages", flag, ft_strlen(flag) + 1) == 0)
+        set_flag(arg, 's');
+    else if (ft_strncmp("--only-matching", flag, ft_strlen(flag) + 1) == 0)
+        set_flag(arg, 'o');
+    else
+        exit_msg("grep: unrecognized option\n", 2, 1);
 }

@@ -15,13 +15,15 @@ char    *ft_get_next_line(int fd)
     if (buff == NULL)
         return (NULL);
     out = NULL;
+    tmp = NULL;
     if (rest != NULL)
     {
         p = ft_strchr1(rest, '\n');
         if (p)
         {
             *p = 0;
-            tmp = ft_strdup1(p + 1);
+            if (*(p + 1))
+                tmp = ft_strdup1(p + 1);
             p = ft_strdup1(rest);
             free(rest);
             free(buff);

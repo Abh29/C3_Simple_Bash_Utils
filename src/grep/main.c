@@ -1,6 +1,6 @@
 #include "ft_grep.h"
 
-int exit_status = EXIT_SUCCESS;
+int exit_status = EXIT_FAILURE;
 
 int main(int argc, char **argv)
 {

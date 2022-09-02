@@ -71,6 +71,7 @@ void    exit_msg(char *msg, int status, int mask);
 void    print_error(char *msg, int status, int mask);
 int     check_flag(t_grep *arg, int flag);
 void    set_flag(t_grep *arg, int flag);
+void    set_long_flag(t_grep *arg, char *flag);
 void    init_grep(t_grep *arg);
 void    read_args(t_grep *arg, int argc, char **argv);
 void    split_patterns(t_grep *arg);

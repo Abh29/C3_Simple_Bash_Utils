@@ -15,13 +15,15 @@ char    *ft_get_next_line(int fd)
     if (buff == NULL)
         return (NULL);
     out = NULL;
+    tmp = NULL;
     if (rest != NULL)
     {
         p = ft_strchr1(rest, '\n');
         if (p)
         {
             *p = 0;
-            tmp = ft_strdup1(p + 1);
+            if (*(p + 1))
+                tmp = ft_strdup1(p + 1);
             p = ft_strdup1(rest);
             free(rest);
             free(buff);
@@ -36,13 +38,14 @@ char    *ft_get_next_line(int fd)
     {
         size = read(fd, buff, BUFFER_SIZE - 1);
         if (size <= 0)
-        break;
+            break;
         buff[size] = 0;
         p = ft_strchr1(buff, '\n');
         if (p)
         {
             *p = 0;
-            rest = ft_strdup1(p + 1);
+            if (*(p + 1))
+                rest = ft_strdup1(p + 1);
             ft_lstadd_back1(&out, ft_lstnew1(ft_strdup1(buff)));
             break;
         }

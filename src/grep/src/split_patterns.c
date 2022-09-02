@@ -1,12 +1,10 @@
 #include "../ft_grep.h"
 
-// TODO: check empty lines in patterns file
-
 void    split_patterns(t_grep *arg){
     char    **spt;
     char    **p;
     char    *line;
-    int     fd, empty = 0;
+    int     fd;
     t_list  *tmp;
 
     if (arg == NULL)
@@ -22,20 +20,21 @@ void    split_patterns(t_grep *arg){
     {
         tmp = arg->patterns_path;
         while (tmp){
-            if ((fd = open(tmp->content, O_RDONLY)) < 0)
+            if (((char *) tmp->content)[0] == '-' && ((char *) tmp->content)[1] == 0)
+                fd = STDIN_FILENO;
+            else if ((fd = open(tmp->content, O_RDONLY)) < 0)
                 exit_perror("error reading patterns file:", 2, check_flag(arg, 's') == 0);
             while ((line = ft_get_next_line(fd))){
-                if (empty == 1 && empty++)
-                    set_flag(arg, F_EMPTLINE);
                 if (*line == 0)
                 {
+                    set_flag(arg, F_EMPTLINE);
                     free(line);
-                    empty++;
                     continue;
                 }
                 ft_lstadd_back(&(arg->patterns_list), ft_lstnew(line));
             }
-            close(fd);
+            if (fd != STDIN_FILENO)
+                close(fd);
             tmp = tmp->next;
         }
     }
